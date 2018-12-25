@@ -190,9 +190,6 @@ function update() {
 }
 this.update = update.bind(this);
 
-document.getElementById("add-point").addEventListener("click", add_point.bind(this));
-document.getElementById("clear-data").addEventListener("click", clear.bind(this));
-
 $(function(){
   $('input[type="time"][value="now"]').each(function(){    
     var d = new Date(),        
@@ -264,6 +261,9 @@ function format_data(binData) {
     $( "#result" ).html(result);
     return (data);
 }
+
+document.getElementById("add-point").addEventListener("click", add_point.bind(this));
+document.getElementById("clear-data").addEventListener("click", clear.bind(this));
 
 // much lifted from https://bl.ocks.org/ctufts/298bfe4b11989960eeeecc9394e9f118
 // which was licensed under GNU General Public License, version 3.

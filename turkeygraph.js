@@ -1,5 +1,6 @@
 var bin = '5bf6dd0e8ae0925944e03a3d';
 var secret_key = '$2a$10$mNtLmo.yrgNyKJL19TxJ/.HDWbJjJ0b1ue8IrV9SxXW6hchvL48Iy'; // not so secret yet
+var data = [];
 
 function get_bin() {
     $.ajax({
@@ -8,28 +9,28 @@ function get_bin() {
       headers: {
         'secret-key': secret_key 
       },
-      success: (data) => {
-        this.data = data;
+      success: (response) => {
+        this.data = response.data;
         if (this.data == "") {
             this.data = [];
         }
         update()
       },
-      error: (err) => { console.log(err.responseJSON); }
+      error: (err) => { console.log('error', err.responseJSON); }
     });
 }
 
 function update_bin(binData) {
     $.ajax({
-      url: 'https://api.jsonbin.io/b/' + bin,
-      type: 'PUT',
-      headers: { 
-        'secret-key': secret_key 
-      },
-      contentType: 'application/json',
-      data: JSON.stringify(binData),
-      success: (data) => { console.log(data); },
-      error: (err) => { console.log(err.responseJSON); }
+        url: 'https://api.jsonbin.io/b/' + bin,
+        type: 'PUT',
+        headers: { 
+            'secret-key': secret_key 
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(binData),
+        success: (data) => { console.log(data); },
+        error: (err) => { console.log('error', err.responseJSON); }
     });
 }
 
@@ -46,6 +47,7 @@ function add_point(event) {
 function clear(event) {
     var data = {};
     data.initial = "false";
+    data.data = []
     update_bin(data)
 }
 
@@ -92,6 +94,9 @@ function time_scale(data, width) {
 }
 
 function update() {
+    if (this.data.length == 0) {
+        return;
+    }
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     ctx.clearRect(0, 0, c.width, c.height);
@@ -145,6 +150,7 @@ function update() {
     var result = "The turkey will be done at: " + Math.floor(x/60) + ":" + x%60;
     $( "#result" ).html(result);
 }
+this.update = update.bind(this);
 
 function calculate_regression() {
     var sigmaX = 0;
@@ -168,10 +174,10 @@ function calculate_regression() {
     return [a, b];
 }
 
-var data = [];
+
 
 document.getElementById("add-point").addEventListener("click", add_point.bind(this));
-document.getElementById("clear-data").addEventListener("click", add_point.bind(this));
+document.getElementById("clear-data").addEventListener("click", clear.bind(this));
 
 $(function(){
   $('input[type="time"][value="now"]').each(function(){    

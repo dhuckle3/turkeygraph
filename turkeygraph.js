@@ -10,8 +10,8 @@ function get_bin() {
         'secret-key': secret_key 
       },
       success: (response) => {
-        this.data = response.data;
-        if (this.data == "") {
+        this.data = response;
+        if (this.data == undefined || this.data == "") {
             this.data = [];
         }
         update()
